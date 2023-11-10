@@ -5,8 +5,8 @@ import 'dart:convert';
 import '../pages/scene_page.dart';
 import '../pages/home_page.dart';
 
-const routeHomePage = '/';
-const routeScenePage = '/scenes/:sceneId';
+const routeHome = (name: 'home', path: '/');
+const routeScene = (name: 'sceneItem', path: '/scene/item');
 
 void printState(GoRouterState state, [String? key]) {
   // this._configuration, {
@@ -22,30 +22,33 @@ void printState(GoRouterState state, [String? key]) {
   print(
     'key: $key\n'
     'name:${state.name}\n'
+    'uri:${state.uri}\n'
     'path:${state.path}\n'
     'fullPath:${state.fullPath}\n'
     'pathParameters:${state.pathParameters}\n'
+    'queryParameters:${state.pathParameters}\n'
     'extra:${state.extra}\n'
   );
 }
 
 final GoRouter routerConfig = GoRouter(
-  initialLocation: routeHomePage,
+  initialLocation: routeHome.name,
   routes: <RouteBase>[
     GoRoute(
-      path: routeHomePage,
+      path: routeHome.path,
+      name: routeHome.name,
       builder: (BuildContext context, GoRouterState state) {
         return const HomePage();
       },
-      routes: <RouteBase>[
-        GoRoute(
-          path: 'scenes/:sceneId',
-          builder: (BuildContext context, GoRouterState state) {
-            printState(state);
-            return const ScenePage(sceneId: 1);
-          },
-        ),
-      ],
     ),
+    GoRoute(
+      path: routeScene.path,
+      name: routeScene.name,
+      builder: (BuildContext context, GoRouterState state) {
+        print('--------------------');
+        printState(state);
+        return const ScenePage(sceneId: 1);
+      },
+    )
   ],
 );

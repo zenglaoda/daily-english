@@ -23,7 +23,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   void onTap(Scene scene) {
-    context.push(routeScenePage, extra: scene.id);
+    context.pushNamed(
+      routeScene.name,
+      queryParameters: { 'sceneId': scene.id.toString() }
+    );
   }
 
   @override
