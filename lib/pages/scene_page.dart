@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 
-import '../models/scene.dart' as scene_model;
-import '../router/route_param.dart';
+import '../models/scene.dart';
+import '../router/index.dart';
 
 class ScenePage extends StatefulWidget {
+  final int sceneId;
   
-  const ScenePage({ super.key });
+  const ScenePage({ super.key, required this.sceneId });
 
   @override
   State<ScenePage> createState() => _ScenePageState();
 }
 
 class _ScenePageState extends State<ScenePage> {
-  int? sceneId;
-  scene_model.Scene? scene;
-  Future<scene_model.Scene>? futureScene;
+  Scene? scene;
+  Future<Scene>? futureScene;
 
 
-  Future<void> getScene() async {
-    futureScene = scene_model.getScene(sceneId!);
+  Future<void> getSceneItem() async {
+    futureScene = getScene(widget.sceneId);
     final item = await futureScene;
     setState(() {
       scene = item;
@@ -28,16 +28,11 @@ class _ScenePageState extends State<ScenePage> {
   @override
   void initState() {
     super.initState();
+    getSceneItem();
   }
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)?.settings.arguments as ScenePageArguments;
-    if (args.sceneId != sceneId) {
-      sceneId = args.sceneId;
-      getScene();
-    }
-
     return Scaffold(
       appBar: AppBar(title: const Text('Scene')),
       body: FutureBuilder(
