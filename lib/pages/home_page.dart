@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> {
   void onTap(Scene scene) {
     context.pushNamed(
       routeScene.name,
-      queryParameters: { 'sceneId': scene.id.toString() }
+      queryParameters: { 'sceneId': scene.id }
     );
   }
 
@@ -40,7 +40,10 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Scenes'),
+        title: const Text(
+          'Scenes', 
+          style: TextStyle(color: Color(0xff333333))
+        )
       ),
       body: ListView(children: scenes.map((scene) {
         return GestureDetector(
@@ -84,7 +87,8 @@ class ListItem extends StatelessWidget {
             ),
             Container(
               padding: const EdgeInsets.only(left: 10),
-              child: const Icon(Icons.arrow_forward_ios,color: Color(0xFF999999), size: 18))
+              child: const Icon(Icons.arrow_forward_ios,color: Color(0xFF999999), size: 18)
+            )
           ]
         ));
   }

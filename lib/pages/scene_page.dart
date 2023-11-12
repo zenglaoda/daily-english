@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../models/scene.dart';
-import '../router/index.dart';
+import '../widgets/custom-snapshot-widget.dart';
 
 class ScenePage extends StatefulWidget {
-  final int sceneId;
+  final String sceneId;
   
   const ScenePage({ super.key, required this.sceneId });
 
@@ -13,12 +13,13 @@ class ScenePage extends StatefulWidget {
 }
 
 class _ScenePageState extends State<ScenePage> {
+  String? sceneId;
   Scene? scene;
   Future<Scene>? futureScene;
 
 
   Future<void> getSceneItem() async {
-    futureScene = getScene(widget.sceneId);
+    futureScene = getScene(sceneId!);
     final item = await futureScene;
     setState(() {
       scene = item;
@@ -28,30 +29,25 @@ class _ScenePageState extends State<ScenePage> {
   @override
   void initState() {
     super.initState();
+    sceneId = widget.sceneId;
     getSceneItem();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Scene')),
-      body: FutureBuilder(
+      appBar: AppBar(
+        title: Text('Scene ${sceneId!}')
+      ),
+      body: FutureBuilder<Scene>(
         future: futureScene,
         builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return const Center(
-              child: Text('数据加载失败'),
-            );
-          } else if (snapshot.hasData) {
-            final data = snapshot.data!;
-            return Center(
-              child: Text(data.title),
-            );
-          } else {
-            return const Center(
-              child: CircularProgressIndicator()
-            );
-          }
+          return CustomSnapshotWidget(
+            snapshot: snapshot,
+            content: const Center(
+              child: Text('aaaa')
+            )
+          );
         },
       )
     );

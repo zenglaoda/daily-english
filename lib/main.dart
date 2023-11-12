@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import './router/index.dart';
-import './models/scene.dart';
 
 
 void main() {

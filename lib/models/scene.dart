@@ -17,7 +17,7 @@ class Sentence {
 
 // 情景
 class Scene {
-  final int id;
+  final String id;
   final String title;
   final String description;
   final List<Sentence> sentences;
@@ -31,9 +31,9 @@ class Scene {
 }
 
 // TODO: remove
-Scene createScene([int? id]) {
+Scene createScene([String? id]) {
   return Scene(
-    id: id ?? Random().nextInt(10000),
+    id: id ?? Random().nextInt(10000).toString(),
     title: lorem(paragraphs: 1, words: 6),
     description: lorem(paragraphs: 5, words: 40),
     sentences: [
@@ -44,15 +44,15 @@ Scene createScene([int? id]) {
   );
 }
 
-Future<List<Scene>> getScenes() async {
+Future<List<Scene>> getScenes() {
   List<Scene> list = [];
   for (int i = 0; i < 20; i++) {
     list.add(createScene());
   }
-  return list;
+  return Future.delayed(const Duration(seconds: 4) ,() => list);
 }
 
-Future<Scene> getScene(int id) async {
+Future<Scene> getScene(String id) async {
   await Future.delayed(const Duration(seconds: 3));
   return createScene(id);
 }
