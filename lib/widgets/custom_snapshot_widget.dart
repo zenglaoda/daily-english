@@ -1,26 +1,35 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
+typedef CustomSnapshotBuilder<T> = Widget Function(BuildContext context, T data);
 
-class CustomSnapshotWidget extends StatelessWidget {
+class CustomSnapshotWidget<T> extends StatelessWidget {
+  final AsyncSnapshot? snapshot;
   final bool loading;
   final bool error;
-  final Widget content;
+  final CustomSnapshotBuilder<T>? builder;
+  final Widget? child;
 
   CustomSnapshotWidget({
     super.key,
-    required AsyncSnapshot snapshot,
-    required this.content
+    required this.snapshot,
+    required this.builder,
+    this.child,
   }):
-    error = snapshot.hasError,
-    loading = snapshot.hasData ? false : true;
+    assert(snapshot != null, 'property snapshot cannot be empty'),
+    assert((builder != null || child != null), 'property builder, child cannot be empty at the same time'),
+    error = snapshot!.hasError,
+    loading = snapshot.connectionState == ConnectionState.waiting;
 
   const CustomSnapshotWidget.custom({ 
     super.key,
-    required this.content,
+    required this.child,
     bool? loading,
     bool? error
   }):
+    assert((child != null), 'property child cannot be empty'),
+    snapshot = null,
+    builder = null,
     loading = loading ?? false,
     error = error ?? false;
 
@@ -48,6 +57,9 @@ class CustomSnapshotWidget extends StatelessWidget {
         )
       );
     }
-    return content;
+    if (builder is CustomSnapshotBuilder<T>) {
+      return builder!(context, snapshot!.data);
+    }
+    return child!;
   }
 }
