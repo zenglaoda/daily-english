@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 
 typedef CustomSnapshotBuilder<T> = Widget Function(BuildContext context, T data);

@@ -86,12 +86,12 @@ class SentenceListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 4),
+      padding: const EdgeInsets.only(top: 18, bottom: 40, left: 4, right: 4),
       children: [
         Text(title, 
           textAlign: TextAlign.center,
           style: const TextStyle(
-            fontSize: 20,
+            fontSize: 22,
             fontWeight: FontWeight.bold,
             color: Color(0xff000000),
           )
@@ -120,8 +120,7 @@ class SentenceItemWidget extends StatelessWidget {
           Text(original, 
             style: const TextStyle(
               color: Color(0xff000000),
-              fontStyle: FontStyle.italic,
-              fontSize: 18
+              fontSize: 20
             )
           ),
           Container(
@@ -129,7 +128,7 @@ class SentenceItemWidget extends StatelessWidget {
             child: Text(translated,
               style: const TextStyle(
                 color: Color(0xff333333),
-                fontSize: 14
+                fontSize: 16
               )
             ),
           )
@@ -146,13 +145,15 @@ void showReadBottomSheet(context) {
     context: context,
     title: '阅读设置',
     builder: (context) => Container(
+      height: 400,
+      alignment: Alignment.topLeft,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const Text('Paragraphs', 
             style: TextStyle(
-              fontSize: 14, 
+              fontSize: 16, 
               color: Color(0xff000000)
             )
           ),

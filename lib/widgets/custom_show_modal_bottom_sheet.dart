@@ -23,18 +23,18 @@ void customShowModalBottomSheet({
               children: [
                 Text(title ?? '',
                   style: const TextStyle(
-                    fontSize: 14,
+                    fontSize: 18,
                     color: Color(0xff000000),
                   ),
                 ),
                 IconButton(
                   onPressed: () {},
-                  icon: const Icon(Icons.close_rounded, size: 14)
+                  icon: const Icon(Icons.close_rounded, size: 18)
                 )
               ],
             ),
             ConstrainedBox(
-              constraints: const BoxConstraints(minHeight: 80),
+              constraints: const BoxConstraints(minHeight: 0),
               child: builder(context),
             )
           ],
