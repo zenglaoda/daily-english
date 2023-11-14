@@ -1,9 +1,8 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 
 import '../models/scene.dart';
 import '../widgets/custom_snapshot_widget.dart';
+import '../widgets/custom_show_modal_bottom_sheet.dart';
 
 class ScenePage extends StatefulWidget {
   final String sceneId;
@@ -54,12 +53,19 @@ class _ScenePageState extends State<ScenePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Scene $sceneId')
+        title: Text('Scene $sceneId'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () {
+              showReadBottomSheet(context);
+            },
+          )
+        ]
       ),
       body: FutureBuilder<Scene>(
         future: futureScene,
         builder: (context, snapshot) {
-          print('snapshot：$snapshot');
           return CustomSnapshotWidget<Scene>(
             snapshot: snapshot,
             builder: (_, data) => SentenceListWidget(paragraphs: paragraphs, title: data.title)
@@ -131,4 +137,37 @@ class SentenceItemWidget extends StatelessWidget {
       )
     );
   }
+}
+
+
+
+void showReadBottomSheet(context) {
+  customShowModalBottomSheet(
+    context: context,
+    title: '阅读设置',
+    builder: (context) => Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Text('Paragraphs', 
+            style: TextStyle(
+              fontSize: 14, 
+              color: Color(0xff000000)
+            )
+          ),
+          Expanded(
+            child: Slider(
+              value: 1,
+              max: 5,
+              divisions: 5,
+              onChanged: (double value) {
+                print(value);
+              },
+            ),
+          )
+        ]
+      ),
+    ),
+  );
 }
