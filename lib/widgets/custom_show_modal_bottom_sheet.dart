@@ -12,7 +12,7 @@ void customShowModalBottomSheet({
     ),
     builder: (context) {
       return Container(
-        padding: const EdgeInsets.only(left: 12, right: 0, top: 0, bottom: 10),
+        padding: const EdgeInsets.only(left: 12, right: 12, top: 0, bottom: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -34,7 +34,7 @@ void customShowModalBottomSheet({
               ],
             ),
             ConstrainedBox(
-              constraints: const BoxConstraints(minHeight: 0),
+              constraints: const BoxConstraints(minHeight: 80),
               child: builder(context),
             )
           ],

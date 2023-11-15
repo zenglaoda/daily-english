@@ -140,12 +140,11 @@ class SentenceItemWidget extends StatelessWidget {
 
 
 
-void showReadBottomSheet(context) {
+void showReadBottomSheet(BuildContext context) {
   customShowModalBottomSheet(
     context: context,
     title: '阅读设置',
     builder: (context) => Container(
-      height: 400,
       alignment: Alignment.topLeft,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -158,17 +157,20 @@ void showReadBottomSheet(context) {
             )
           ),
           Expanded(
-            child: Slider(
-              value: 1,
-              max: 5,
-              divisions: 5,
-              onChanged: (double value) {
-                print(value);
-              },
-            ),
+            child: Container(
+              height: 30,
+              child: Slider(
+                value: 1,
+                max: 5,
+                divisions: 5,
+                onChanged: (double value) {
+                  print(value);
+                },
+              ),
+            )
           )
         ]
       ),
-    ),
+    )
   );
 }

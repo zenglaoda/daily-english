@@ -4,6 +4,9 @@ import 'package:go_router/go_router.dart';
 import '../pages/scene_page.dart';
 import '../pages/home_page.dart';
 
+// demo页面
+import '../demo/index.dart';
+
 const routeHome = (name: 'home', path: '/');
 const routeScene = (name: 'sceneItem', path: '/scene/item');
 
@@ -27,6 +30,9 @@ void printState(GoRouterState state, [String? key]) {
 final GoRouter routerConfig = GoRouter(
   initialLocation: routeHome.path,
   routes: <RouteBase>[
+    // TODO: remove
+    ...demoRoutes,
+
     GoRoute(
       path: routeHome.path,
       name: routeHome.name,
