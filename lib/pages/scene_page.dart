@@ -23,12 +23,12 @@ class _ScenePageState extends State<ScenePage> {
 
   String get sceneId => widget.sceneId;
 
-  int get sentenceLen => scene != null ? scene!.sentences.length : 1;
+  int get sentenceTotal => scene == null ? 1: scene!.sentences.length;
 
   // 生成段落
   void sentences2paragraphs() {
     final sentences = scene!.sentences;
-    final int sentencePerParagraph = (sentenceLen / paragraphTotal).floor();
+    final int sentencePerParagraph = (sentenceTotal / paragraphTotal).floor();
     final List<SceneParagraph> group = [];
     for (int i = 0; i < paragraphTotal; i++) {
       final endIndex = i == paragraphTotal - 1 ? sentences.length : (i + 1) * sentencePerParagraph;
@@ -38,6 +38,11 @@ class _ScenePageState extends State<ScenePage> {
     setState(() {
       paragraphs = group;
     });
+  }
+
+  void updateParagraphTotal(double value) {
+    paragraphTotal = value.ceil();
+    sentences2paragraphs();
   }
 
   // 阅读设置
@@ -51,25 +56,22 @@ class _ScenePageState extends State<ScenePage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text('Paragraphs', 
+            Text('Paragraphs:$paragraphTotal', 
               style: TextStyle(
                 fontSize: 16, 
                 color: Color(0xff000000)
               )
             ),
             Expanded(
-              child: Container(
-                height: 30,
-                child: Slider(
-                  value: paragraphTotal.toDouble(),
-                  max: math.max(1, sentenceLen.toDouble()),
-                  divisions: math.max(1, sentenceLen),
-                  onChanged: (double value) {
-                    paragraphTotal = value.floor();
-                    sentences2paragraphs();
-                  },
-                ),
-              )
+              child: Slider(
+                value: paragraphTotal.toDouble(),
+                min: 1.0,
+                max: math.max(1, sentenceTotal.toDouble()),
+                divisions: math.max(1, sentenceTotal),
+                onChanged: (double value) {
+                  updateParagraphTotal(value);
+                },
+              ),
             )
           ]
         ),
@@ -123,7 +125,11 @@ class SentenceListWidget extends StatelessWidget {
   final String title;
   final List<SceneParagraph> paragraphs;
 
-  const SentenceListWidget({ super.key, required this.paragraphs, required this.title });
+  const SentenceListWidget({ 
+    super.key,
+    required this.paragraphs,
+    required this.title
+  });
 
   @override
   Widget build(BuildContext context) {
