@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
 import '../models/scene.dart';
 import '../widgets/custom_snapshot_widget.dart';
@@ -17,30 +18,71 @@ class _ScenePageState extends State<ScenePage> {
   Scene? scene;
   Future<Scene>? futureScene;
   List<SceneParagraph> paragraphs = [];
+  // 一共分成多少个段落
   int paragraphTotal = 1;
 
   String get sceneId => widget.sceneId;
 
+  int get sentenceLen => scene != null ? scene!.sentences.length : 1;
+
   // 生成段落
   void sentences2paragraphs() {
     final sentences = scene!.sentences;
-    final int sentencePerParagraph = (sentences.length / paragraphTotal).floor();
-    paragraphs = [];
+    final int sentencePerParagraph = (sentenceLen / paragraphTotal).floor();
+    final List<SceneParagraph> group = [];
     for (int i = 0; i < paragraphTotal; i++) {
       final endIndex = i == paragraphTotal - 1 ? sentences.length : (i + 1) * sentencePerParagraph;
       final paragraph = sentences.sublist(i * sentencePerParagraph,  endIndex);
-      paragraphs.add(paragraph);
+      group.add(paragraph);
     }
+    setState(() {
+      paragraphs = group;
+    });
+  }
+
+  // 阅读设置
+  void showReadBottomSheet(BuildContext context) {
+    customShowModalBottomSheet(
+      context: context,
+      title: '阅读设置',
+      builder: (context) => Container(
+        alignment: Alignment.topLeft,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Text('Paragraphs', 
+              style: TextStyle(
+                fontSize: 16, 
+                color: Color(0xff000000)
+              )
+            ),
+            Expanded(
+              child: Container(
+                height: 30,
+                child: Slider(
+                  value: paragraphTotal.toDouble(),
+                  max: math.max(1, sentenceLen.toDouble()),
+                  divisions: math.max(1, sentenceLen),
+                  onChanged: (double value) {
+                    paragraphTotal = value.floor();
+                    sentences2paragraphs();
+                  },
+                ),
+              )
+            )
+          ]
+        ),
+      )
+    );
   }
 
   Future<void> getSceneItem() async {
     futureScene = getScene(sceneId);
     final item = await futureScene!;
-    setState(() {
-      scene = item;
-      paragraphTotal = item.sentences.length;
-      sentences2paragraphs();
-    });
+    scene = item;
+    paragraphTotal = item.sentences.length;
+    sentences2paragraphs();
   }
 
   @override
@@ -138,39 +180,3 @@ class SentenceItemWidget extends StatelessWidget {
   }
 }
 
-
-
-void showReadBottomSheet(BuildContext context) {
-  customShowModalBottomSheet(
-    context: context,
-    title: '阅读设置',
-    builder: (context) => Container(
-      alignment: Alignment.topLeft,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const Text('Paragraphs', 
-            style: TextStyle(
-              fontSize: 16, 
-              color: Color(0xff000000)
-            )
-          ),
-          Expanded(
-            child: Container(
-              height: 30,
-              child: Slider(
-                value: 1,
-                max: 5,
-                divisions: 5,
-                onChanged: (double value) {
-                  print(value);
-                },
-              ),
-            )
-          )
-        ]
-      ),
-    )
-  );
-}
