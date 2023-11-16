@@ -32,6 +32,8 @@ class Scene {
 
 // 多个句子组成的段落
 typedef SceneParagraph = List<Sentence>;
+// 多个段落
+typedef SceneParagraphs = List<List<Sentence>>;
 
 // TODO: remove
 Scene createScene([String? id]) {

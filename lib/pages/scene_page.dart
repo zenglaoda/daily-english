@@ -17,7 +17,7 @@ class ScenePage extends StatefulWidget {
 class _ScenePageState extends State<ScenePage> {
   Scene? scene;
   Future<Scene>? futureScene;
-  List<SceneParagraph> paragraphs = [];
+  SceneParagraphs paragraphs = [];
   // 一共分成多少个段落
   int paragraphTotal = 1;
 
@@ -25,13 +25,16 @@ class _ScenePageState extends State<ScenePage> {
 
   int get sentenceTotal => scene == null ? 1: scene!.sentences.length;
 
+  void Function(VoidCallback fn)? readBottomSheetSetState;
+
   // 生成段落
   void sentences2paragraphs() {
-    final sentences = scene!.sentences;
-    final int sentencePerParagraph = (sentenceTotal / paragraphTotal).floor();
-    final List<SceneParagraph> group = [];
-    for (int i = 0; i < paragraphTotal; i++) {
-      final endIndex = i == paragraphTotal - 1 ? sentences.length : (i + 1) * sentencePerParagraph;
+    final int total = paragraphTotal;
+    final List<Sentence> sentences = scene!.sentences;
+    final int sentencePerParagraph = (sentenceTotal / total).floor();
+    final SceneParagraphs group = [];
+    for (int i = 0; i < total; i++) {
+      final endIndex = i == total - 1 ? sentences.length : (i + 1) * sentencePerParagraph;
       final paragraph = sentences.sublist(i * sentencePerParagraph,  endIndex);
       group.add(paragraph);
     }
@@ -40,51 +43,62 @@ class _ScenePageState extends State<ScenePage> {
     });
   }
 
-  void updateParagraphTotal(double value) {
-    paragraphTotal = value.ceil();
-    sentences2paragraphs();
+  // 更新段落总数
+  void updateReadBottomSheet() {
+    // TODO: sheet 已经关闭时不能在调用该方法
+    if (readBottomSheetSetState != null) {
+      readBottomSheetSetState!((){});
+    }
   }
 
   // 阅读设置
-  void showReadBottomSheet(BuildContext context) {
+  void showReadBottomSheet() {
     customShowModalBottomSheet(
       context: context,
       title: '阅读设置',
-      builder: (context) => Container(
-        alignment: Alignment.topLeft,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text('Paragraphs:$paragraphTotal', 
-              style: TextStyle(
-                fontSize: 16, 
-                color: Color(0xff000000)
-              )
-            ),
-            Expanded(
-              child: Slider(
-                value: paragraphTotal.toDouble(),
-                min: 1.0,
-                max: math.max(1, sentenceTotal.toDouble()),
-                divisions: math.max(1, sentenceTotal),
-                onChanged: (double value) {
-                  updateParagraphTotal(value);
-                },
+      builder: (_, setState) {
+        readBottomSheetSetState = setState;
+        return Container(
+          alignment: Alignment.topLeft,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text('Paragraphs: $paragraphTotal', 
+                style: const TextStyle(
+                  fontSize: 16, 
+                  color: Color(0xff000000)
+                )
               ),
-            )
-          ]
-        ),
-      )
+              Expanded(
+                child: Slider(
+                  value: paragraphTotal.toDouble(),
+                  min: 1.0,
+                  max: math.max(1, sentenceTotal.toDouble()),
+                  divisions: math.max(1, sentenceTotal - 1),
+                  onChanged: (double value) {
+                    setState(() {
+                      paragraphTotal = value.round();
+                      sentences2paragraphs();
+                    });
+                  },
+                ),
+              )
+            ]
+          ),
+        );
+      }
     );
   }
 
+  // 获取场景详情
   Future<void> getSceneItem() async {
     futureScene = getScene(sceneId);
     final item = await futureScene!;
     scene = item;
     paragraphTotal = item.sentences.length;
     sentences2paragraphs();
+    updateReadBottomSheet();
   }
 
   @override
@@ -102,7 +116,7 @@ class _ScenePageState extends State<ScenePage> {
           IconButton(
             icon: const Icon(Icons.menu),
             onPressed: () {
-              showReadBottomSheet(context);
+              showReadBottomSheet();
             },
           )
         ]
@@ -167,6 +181,7 @@ class SentenceItemWidget extends StatelessWidget {
         children: [
           Text(original, 
             style: const TextStyle(
+              height: 1.3,
               color: Color(0xff000000),
               fontSize: 20
             )
