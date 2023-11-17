@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../router/index.dart';
 import './flex.dart';
 import './constrains.dart';
 
@@ -12,19 +13,28 @@ List<GoRoute> demoRoutes = [
     path: '/demo',
     name: 'demo',
     builder: (context, state) => const DemoPage(),
-  ),
-  GoRoute(
-    path: '/demo/flex',
-    name: 'flex',
-    builder: (context, state) => const FlexPage(),
-  ),
-  GoRoute(
-    path: '/demo/constrains',
-    name: 'constrains',
-    builder: (context, state) => const ConstrainsPage(),
+    routes: [
+      GoRoute(
+        path: 'flex',
+        name: 'flex',
+        builder: (context, state) => const FlexPage(),
+      ),
+      GoRoute(
+        path: 'constrains',
+        name: 'constrains',
+        builder: (context, state) => const ConstrainsPage(),
+      ),
+    ]
   ),
 ];
 
+List<({String name, String path})> menus = [
+  routeHome,
+  routeRegister,
+  routeSign,
+  (name: 'flex', path: '/demo/flex'),
+  (name: 'constrains', path: '/demo/constrains'),
+];
 
 class DemoPage extends StatelessWidget {
   const DemoPage({super.key});
@@ -32,10 +42,10 @@ class DemoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final body = ListView(
-      children: demoRoutes.map((route) => GestureDetector(
-        child: ListTile(title: Text(route.name!),
+      children: menus.map((menu) => GestureDetector(
+        child: ListTile(title: Text(menu.name),
         onTap: () {
-          context.pushNamed(route.name!);
+          context.pushNamed(menu.name);
         },
       ))).toList()
     );

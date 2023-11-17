@@ -1,98 +1,111 @@
 import 'package:flutter/material.dart';
+import '../widgets/cus_form.dart';
 
 class RegisterPage extends StatefulWidget {
-
   const RegisterPage({super.key});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
-
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  
-  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final form = FormModel();
 
   @override
   void initState() {
     super.initState();
   }
 
-  @override
-  Widget build(BuildContext context) {
+  void onSubmit() {
+    _formKey.currentState?.validate();
+  }
 
-    final Widget formEl = Form(
+  Widget renderForm() {
+    return Form(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       key: _formKey,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          const Spacer(),
-          FieldItem(
-            TextFormField(
+          CusFormItem(
+            child: CusTextFormField(
               maxLength: 20,
-              decoration: const InputDecoration(
-                counterText: '',
-                labelText: 'Username',
-                hintText: 'Enter your username',
-                labelStyle: TextStyle(fontSize: 16),
-                floatingLabelStyle:TextStyle(fontSize: 20),
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.only(left: 16, right: 10, top: 5, bottom: 5),
-              ),
-              buildCounter: null,
+              labelText: 'Username',
+              hintText: 'Enter your username',
+              onChanged: (value) => form.username = value,
               validator: (value) {
-                if (value == null || value.isEmpty) {
+                if (value == null || value.trim().isEmpty) {
                   return 'username is required';
                 }
                 return null;
               },
             ),
           ),
-          FieldItem(
-            TextFormField(
+          CusFormItem(
+            child: CusTextFormField(
               maxLength: 20,
-              buildCounter: null,
               obscureText: true,
-              decoration: const InputDecoration(
-                counterText: '',
-                labelText: 'Password',
-                hintText: 'Enter your Password',
-                floatingLabelStyle:TextStyle(fontSize: 20),
-                labelStyle: TextStyle(fontSize: 16),
-                border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.only(left: 16, right: 10, top: 5, bottom: 5),
-              ),
+              labelText: 'Password',
+              hintText: 'Enter your Password',
+              onChanged: (value) => form.password = value,
               validator: (value) {
-                if (value == null || value.isEmpty) {
+                if (value == null || value.trim().isEmpty) {
                   return 'Password is required';
                 }
                 return null;
               },
             ),
           ),
-          FieldItem(
+          CusFormItem(
+            child: CusTextFormField(
+              maxLength: 20,
+              obscureText: true,
+              labelText: 'Confirm',
+              hintText: 'Confirm Password',
+              onChanged: (value) => form.confirm = value,
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Password is required';
+                }
+                if (value != form.password) {
+                  return 'Entered passwords differ';
+                }
+                return null;
+              },
+            ),
+          ),
+          CusFormItem(
             top: 30,
-            ElevatedButton(
+            child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 50)
               ),
-              onPressed: (){}, 
+              onPressed: onSubmit, 
               child: const Text('Submit')
             ),
           ),
-          const Spacer(flex: 3),
         ],
-      ),
+      ) 
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Register'),
       ),
       body: Center(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-          width: double.infinity,
-          child: formEl
+        heightFactor: 1.4,
+        child: Scrollbar(
+          child: SingleChildScrollView(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+              width: double.infinity,
+              child: renderForm()
+            ),
+          ) 
         ),
       )
     );
@@ -100,23 +113,13 @@ class _RegisterPageState extends State<RegisterPage> {
 }
 
 
-class FieldItem extends StatelessWidget {
-  final Widget child;
-  final double top;
-
-  const FieldItem(
-    this.child, 
-    { 
-      super.key,
-      this.top = 20
-    }
-  );
-
+class FormModel {
+  String username = '';
+  String password = '';
+  String confirm = '';
+  
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(top: top),
-      child: child,
-    );
+  String toString() {
+    return 'FormModel: {username: $username, password: $password, confirm: $confirm}';
   }
 }

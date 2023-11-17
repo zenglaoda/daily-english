@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-typedef CustomSnapshotBuilder<T> = Widget Function(BuildContext context, T data);
+typedef CusSnapshotBuilder<T> = Widget Function(BuildContext context, T data);
 
-class CustomSnapshotWidget<T> extends StatelessWidget {
+class CusSnapshotWidget<T> extends StatelessWidget {
   final AsyncSnapshot? snapshot;
   final bool loading;
   final bool error;
-  final CustomSnapshotBuilder<T>? builder;
+  final CusSnapshotBuilder<T>? builder;
   final Widget? child;
 
-  CustomSnapshotWidget({
+  CusSnapshotWidget({
     super.key,
     required this.snapshot,
     required this.builder,
@@ -20,7 +20,7 @@ class CustomSnapshotWidget<T> extends StatelessWidget {
     error = snapshot!.hasError,
     loading = snapshot.connectionState == ConnectionState.waiting;
 
-  const CustomSnapshotWidget.custom({ 
+  const CusSnapshotWidget.custom({ 
     super.key,
     required this.child,
     bool? loading,
@@ -56,7 +56,7 @@ class CustomSnapshotWidget<T> extends StatelessWidget {
         )
       );
     }
-    if (builder is CustomSnapshotBuilder<T>) {
+    if (builder is CusSnapshotBuilder<T>) {
       return builder!(context, snapshot!.data);
     }
     return child!;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../pages/sign_page.dart';
 import '../pages/register.dart';
 import '../pages/scene_page.dart';
 import '../pages/home_page.dart';
@@ -9,6 +10,7 @@ import '../pages/home_page.dart';
 import '../demo/index.dart';
 
 const routeRegister = (name: 'register', path: '/register');
+const routeSign = (name: 'sign', path: '/sign');
 const routeHome = (name: 'home', path: '/');
 const routeScene = (name: 'sceneItem', path: '/scene/item');
 
@@ -31,7 +33,7 @@ void printState(GoRouterState state, [String? key]) {
 }
 
 final GoRouter routerConfig = GoRouter(
-  initialLocation: routeRegister.path,
+  initialLocation: '/demo',
   routes: <RouteBase>[
     // TODO: remove
     ...demoRoutes,
@@ -40,6 +42,11 @@ final GoRouter routerConfig = GoRouter(
       path: routeRegister.path,
       name: routeRegister.name,
       builder: (BuildContext context, GoRouterState state) => const RegisterPage()
+    ),
+    GoRoute(
+      path: routeSign.path,
+      name: routeSign.name,
+      builder: (BuildContext context, GoRouterState state) => const SignPage()
     ),
     GoRoute(
       path: routeHome.path,

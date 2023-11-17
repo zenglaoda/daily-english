@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../router/index.dart';
 import '../models/scene.dart';
+import '../widgets/cus_snapshot_widget.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -13,14 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Scene> scenes = [];
-
-  Future<void> getSceneList() async {
-    final list = await getScenes();
-    setState(() {
-      scenes = list;
-    });
-  }
+  late Future<List<Scene>> futureScenes = getScenes();
 
   void onTap(Scene scene) {
     context.pushNamed(
@@ -32,25 +26,29 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    getSceneList();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text(
           'Scenes', 
           style: TextStyle(color: Color(0xff333333))
         )
       ),
-      body: ListView(children: scenes.map((scene) {
-        return GestureDetector(
-          onTap: () => onTap(scene),
-          child: ListItem(title: scene.title),
-        );
-      }).toList())
+      body: FutureBuilder<List<Scene>>(
+        future: futureScenes,
+        builder: (_, snapshot) => CusSnapshotWidget<List<Scene>>(
+          snapshot: snapshot,
+          builder: (context, data) => ListView(children: data.map((scene) {
+            return GestureDetector(
+              onTap: () => onTap(scene),
+              child: ListItem(title: scene.title),
+            );
+          }).toList()),
+        )
+      ) 
     );
   }
 }

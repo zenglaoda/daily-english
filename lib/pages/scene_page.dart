@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 import '../models/scene.dart';
-import '../widgets/custom_snapshot_widget.dart';
+import '../widgets/cus_snapshot_widget.dart';
 import '../widgets/custom_show_modal_bottom_sheet.dart';
 
 class ScenePage extends StatefulWidget {
@@ -124,7 +124,7 @@ class _ScenePageState extends State<ScenePage> {
       body: FutureBuilder<Scene>(
         future: futureScene,
         builder: (context, snapshot) {
-          return CustomSnapshotWidget<Scene>(
+          return CusSnapshotWidget<Scene>(
             snapshot: snapshot,
             builder: (_, data) => SentenceListWidget(paragraphs: paragraphs, title: data.title)
           );
