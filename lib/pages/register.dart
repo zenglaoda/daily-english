@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
 import '../widgets/cus_form.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -18,6 +20,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void onSubmit() {
+    context.pop();
     _formKey.currentState?.validate();
   }
 

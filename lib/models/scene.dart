@@ -42,6 +42,10 @@ Scene createScene([String? id]) {
     title: lorem(paragraphs: 1, words: 6),
     description: lorem(paragraphs: 5, words: 40),
     sentences: [
+      const Sentence(
+        original: 'A lightweight message with an optional action which briefly displays at the bottom of the screen.',
+        translated: '带有可选操作的轻量级消息，该消息在屏幕底部短暂显示。'
+      ),
       const Sentence(original: 'These shoes are very comfortable.', translated: '这双鞋很舒适'),
       const Sentence(original: 'Name you price?', translated: '开个价?'),
       const Sentence(original: 'What\'s the price of this pair of shoes?', translated: '这双鞋多少钱?'),

@@ -33,8 +33,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Scenes', 
-          style: TextStyle(color: Color(0xff333333))
+          'Scenes'
         )
       ),
       body: FutureBuilder<List<Scene>>(
